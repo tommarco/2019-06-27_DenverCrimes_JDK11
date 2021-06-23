@@ -15,6 +15,7 @@ import javafx.scene.control.TextArea;
 public class FXMLController {
 	
 	private Model model;
+	boolean flag=false;
 
     @FXML
     private ResourceBundle resources;
@@ -23,10 +24,10 @@ public class FXMLController {
     private URL location;
 
     @FXML
-    private ComboBox<?> boxCategoria;
+    private ComboBox<String> boxCategoria;
 
     @FXML
-    private ComboBox<?> boxAnno;
+    private ComboBox<Integer> boxAnno;
 
     @FXML
     private Button btnAnalisi;
@@ -42,11 +43,46 @@ public class FXMLController {
 
     @FXML
     void doCalcolaPercorso(ActionEvent event) {
+			if(flag==false) {
+			    		
+			    		
+			    		txtResult.appendText("Prima crea il grafo");
+			    		
+			    		return;
+			    	}
 
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+	txtResult.clear();
+
+    	
+    	//METTERE IL .GETVALUE()
+    	String reato= boxCategoria.getValue();
+    	if( reato==null) {
+    		
+    		txtResult.appendText("Seleziona la categoria");
+    		return;
+    		
+    	}
+    	int anno= boxAnno.getValue();
+    	if(anno==0) {
+    		
+    		
+    		txtResult.appendText("Seleziona l'anno");
+    		return;
+    		
+    	}
+    	
+    	this.model.creaGrafo(anno,reato);
+    	
+    	txtResult.appendText("GRAFO CREATO \n");
+    	txtResult.appendText("# VERTICI: "+this.model.nVertici()+"\n");
+    	txtResult.appendText("# ARCHI: "+ this.model.nArchi());
+
+
+		flag=true;
 
     }
 
@@ -63,5 +99,16 @@ public class FXMLController {
 
 	public void setModel(Model model) {
 		this.model = model;
+		
+		for(String reato: this.model.getEvents()) {
+			
+			boxCategoria.getItems().add(reato);
+			
+		}
+		for(int i=2014; i<=2016; i++) {
+			
+			boxAnno.getItems().add(i);
+			
+		}
 	}
 }
